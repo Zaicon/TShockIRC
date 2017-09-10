@@ -6,6 +6,7 @@ using IrcDotNet;
 using Terraria;
 using TShockAPI;
 using TShockAPI.DB;
+using Terraria.Utilities;
 
 namespace TShockIRC
 {
@@ -28,12 +29,12 @@ namespace TShockIRC
 				if (String.IsNullOrEmpty(ircCommand.Permission) || senderGroup.HasPermission(ircCommand.Permission))
 				{
 					if (ircCommand.DoLog)
-						Log.Info("{0} executed: /{1}.", sender.NickName, str);
+						TShock.Log.Info("{0} executed: /{1}.", sender.NickName, str);
 					ircCommand.Execute(args);
 				}
 				else
 				{
-					Log.Warn("{0} tried to execute /{1}.", sender.NickName, str);
+					TShock.Log.Warn("{0} tried to execute /{1}.", sender.NickName, str);
 					TShockIRC.SendMessage(target, "\u00035You do not have access to this command.");
 				}
 			}
@@ -44,13 +45,12 @@ namespace TShockIRC
 
 				if (commands.Count() != 0)
 				{
-					Main.rand = new Random();
-					WorldGen.genRand = new Random();
+					Main.rand = new UnifiedRandom();
 					foreach (Command command in commands)
 					{
 						if (!command.CanRun(tsIrcPlayer))
 						{
-							Log.Warn("{0} tried to execute /{1}.", sender.NickName, str);
+							TShock.Log.Warn("{0} tried to execute /{1}.", sender.NickName, str);
 							TShockIRC.SendMessage(target, "\u00035You do not have access to this command.");
 						}
 						else if (!command.AllowServer)
@@ -58,10 +58,10 @@ namespace TShockIRC
 						else
 						{
 							var parms = args.ParameterRange(0, args.Length);
-							if (TShockAPI.Hooks.PlayerHooks.OnPlayerCommand(tsIrcPlayer, command.Name, str, parms, ref commands))
+							if (TShockAPI.Hooks.PlayerHooks.OnPlayerCommand(tsIrcPlayer, command.Name, str, parms, ref commands, TShock.Config.CommandSpecifier))
 								return;
 							if (command.DoLog)
-								Log.Info("{0} executed: /{1}.", sender.NickName, str);
+								TShock.Log.Info("{0} executed: /{1}.", sender.NickName, str);
 							command.Run(str, tsIrcPlayer, parms);
 						}
 					}
@@ -71,7 +71,7 @@ namespace TShockIRC
 			}
 			else
 			{
-				Log.Warn("{0} tried to execute /{1}.", sender.NickName, str);
+				TShock.Log.Warn("{0} tried to execute /{1}.", sender.NickName, str);
 				TShockIRC.SendMessage(target, "\u00035You do not have access to this command.");
 			}
 		}
@@ -135,10 +135,10 @@ namespace TShockIRC
 				TShockIRC.SendMessage(e.Target, "\u00035Invalid user.");
 			else
 			{
-				if (String.Equals(user.Password, TShock.Utils.HashPassword(e[1]), StringComparison.OrdinalIgnoreCase))
+				if (user.VerifyPassword(e[1]))
 				{
 					TShockIRC.SendMessage(e.Target, "\u00033You have logged in as " + e[0] + ".");
-					TShockIRC.IrcUsers[(IrcUser)e.Sender] = TShock.Utils.GetGroup(user.Group);
+					TShockIRC.IrcUsers[e.Sender] = TShock.Utils.GetGroup(user.Group);
 				}
 				else
 					TShockIRC.SendMessage(e.Target, "\u00035Incorrect password!");
@@ -146,7 +146,7 @@ namespace TShockIRC
 		}
 		static void Logout(object sender, IRCCommandEventArgs e)
 		{
-			TShockIRC.IrcUsers[(IrcUser)e.Sender] = TShock.Groups.GetGroupByName(TShock.Config.DefaultGuestGroupName);
+			TShockIRC.IrcUsers[e.Sender] = TShock.Groups.GetGroupByName(TShock.Config.DefaultGuestGroupName);
 			TShockIRC.SendMessage(e.Target, "\u00033You have logged out.");
 		}
 		static void Players(object sender, IRCCommandEventArgs e)

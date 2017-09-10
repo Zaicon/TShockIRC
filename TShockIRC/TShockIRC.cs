@@ -13,10 +13,11 @@ using TShockAPI;
 using TShockAPI.Hooks;
 
 using Group = TShockAPI.Group;
+using Microsoft.Xna.Framework;
 
 namespace TShockIRC
 {
-	[ApiVersion(1, 16)]
+	[ApiVersion(2, 1)]
 	public class TShockIRC : TerrariaPlugin
 	{
 		#region TerrariaPlugin implementation
@@ -40,7 +41,7 @@ namespace TShockIRC
 
 		public static Config Config = new Config();
 		public static CtcpClient CtcpClient;
-		public static IrcClient IrcClient = new IrcClient();
+		public static StandardIrcClient IrcClient = new StandardIrcClient();
 		public static Dictionary<IrcUser, Group> IrcUsers = new Dictionary<IrcUser, Group>();
 
 		public TShockIRC(Main game)
@@ -57,7 +58,7 @@ namespace TShockIRC
 
 			Connecting = true;
 			IrcUsers.Clear();
-			IrcClient = new IrcClient();
+			IrcClient = new StandardIrcClient();
 			IrcClient.Connect(Config.Server, Config.Port, Config.SSL,
 				new IrcUserRegistrationInfo()
 				{
@@ -166,7 +167,7 @@ namespace TShockIRC
 			if (!IrcClient.IsConnected)
 				Connect();
 			else if (!String.IsNullOrEmpty(Config.ServerLoginAdminMessageFormat))
-				SendMessage(Config.AdminChannel, String.Format(Config.ServerLoginAdminMessageFormat, e.Player.Name, e.Player.UserAccountName, e.Player.IP));
+				SendMessage(Config.AdminChannel, String.Format(Config.ServerLoginAdminMessageFormat, e.Player.Name, e.Player.User.Name, e.Player.IP));
 		}
 
 		#region Commands
@@ -181,7 +182,7 @@ namespace TShockIRC
 			IrcClient.Quit("Restarting...");
 			IrcUsers.Clear();
 
-			IrcClient = new IrcClient();
+			IrcClient = new StandardIrcClient();
 			IrcClient.Connect(Config.Server, Config.Port, Config.SSL,
 				new IrcUserRegistrationInfo()
 				{

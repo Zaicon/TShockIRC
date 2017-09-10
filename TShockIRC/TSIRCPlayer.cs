@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TShockAPI;
-using IrcDotNet;
+﻿using IrcDotNet;
 using Microsoft.Xna.Framework;
+using TShockAPI;
 
 namespace TShockIRC
 {
@@ -23,27 +19,27 @@ namespace TShockIRC
 
 		public override void SendMessage(string msg, Color color)
 		{
-			TShockIRC.SendMessage(Target, msg);
+			TSIrcClient.SendMessage(Target, msg);
 		}
 		public override void SendMessage(string msg, byte red, byte green, byte blue)
 		{
-			TShockIRC.SendMessage(Target, msg);
+			TSIrcClient.SendMessage(Target, msg);
 		}
 		public override void SendErrorMessage(string msg)
 		{
-			TShockIRC.SendMessage(Target, "\u000305" + msg);
+			TSIrcClient.SendMessage(Target, "\u000305" + msg);
 		}
 		public override void SendInfoMessage(string msg)
 		{
-			TShockIRC.SendMessage(Target, "\u000302" + msg);
+			TSIrcClient.SendMessage(Target, "\u000302" + msg);
 		}
 		public override void SendSuccessMessage(string msg)
 		{
-			TShockIRC.SendMessage(Target, "\u000303" + msg);
+			TSIrcClient.SendMessage(Target, "\u000303" + msg);
 		}
 		public override void SendWarningMessage(string msg)
 		{
-			TShockIRC.SendMessage(Target, "\u000305" + msg);
+			TSIrcClient.SendMessage(Target, "\u000305" + msg);
 		}
 	}
 }

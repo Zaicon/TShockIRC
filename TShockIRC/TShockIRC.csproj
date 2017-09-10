@@ -60,7 +60,8 @@
     <Compile Include="IRCCommandEventArgs.cs" />
     <Compile Include="IRCCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TShockIRC.cs" />
+    <Compile Include="TSIrcClient.cs" />
+    <Compile Include="TSIrcMain.cs" />
     <Compile Include="TSIrcPlayer.cs" />
   </ItemGroup>
   <ItemGroup>

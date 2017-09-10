@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using IrcDotNet.Properties;
 
 namespace IrcDotNet
 {
@@ -26,8 +25,8 @@ namespace IrcDotNet
                     throw new ArgumentNullException("handleModeParameter");
             }
 
-            // Reads list of mode changes, where each group of modes is prefixed by a '+' or '-', representing respectively
-            // setting or unsetting of the given modes.
+            // Reads list of mode changes, where each group of modes is prefixed by a '+' or '-', representing
+            // respectively setting or unsetting of the given modes.
             bool? addMode = null;
             var modeParametersEnumerator = newModeParameters == null ? null : newModeParameters.GetEnumerator();
             foreach (var mode in newModes)
@@ -45,7 +44,7 @@ namespace IrcDotNet
                     if (newModeParameters != null && modesWithParameters.Contains(mode))
                     {
                         if (!modeParametersEnumerator.MoveNext())
-                            throw new ArgumentException(Properties.Resources.MessageNotEnoughModeParameters,
+                            throw new ArgumentException(Resources.MessageNotEnoughModeParameters,
                                 "newModeParameters");
                         handleModeParameter(addMode.Value, mode, modeParametersEnumerator.Current);
                     }

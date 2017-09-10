@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace IrcDotNet.Ctcp
 {
@@ -10,11 +7,11 @@ namespace IrcDotNet.Ctcp
     partial class CtcpClient
     {
         /// <summary>
-        /// Process ACTION messages received from a user.
+        ///     Process ACTION messages received from a user.
         /// </summary>
         /// <param name="message">The message received from the user.</param>
         [MessageProcessor("action")]
-        protected void ProcessMessageAction(CtcpMessage message)
+        protected internal void ProcessMessageAction(CtcpMessage message)
         {
             Debug.Assert(message.Data != null);
 
@@ -27,11 +24,11 @@ namespace IrcDotNet.Ctcp
         }
 
         /// <summary>
-        /// Process TIME messages received from a user.
+        ///     Process TIME messages received from a user.
         /// </summary>
         /// <param name="message">The message received from the user.</param>
         [MessageProcessor("time")]
-        protected void ProcessMessageTime(CtcpMessage message)
+        protected internal void ProcessMessageTime(CtcpMessage message)
         {
             if (message.IsResponse)
             {
@@ -43,16 +40,16 @@ namespace IrcDotNet.Ctcp
             {
                 var localDateTime = DateTimeOffset.Now.ToString("o");
 
-                SendMessageTime(new[] { message.Source }, localDateTime, true);
+                SendMessageTime(new[] {message.Source}, localDateTime, true);
             }
         }
 
         /// <summary>
-        /// Process VERSION messages received from a user.
+        ///     Process VERSION messages received from a user.
         /// </summary>
         /// <param name="message">The message received from the user.</param>
         [MessageProcessor("version")]
-        protected void ProcessMessageVersion(CtcpMessage message)
+        protected internal void ProcessMessageVersion(CtcpMessage message)
         {
             if (message.IsResponse)
             {
@@ -62,19 +59,19 @@ namespace IrcDotNet.Ctcp
             }
             else
             {
-                if (this.ClientVersion != null)
+                if (ClientVersion != null)
                 {
-                    SendMessageVersion(new[] { message.Source }, this.ClientVersion, true);
+                    SendMessageVersion(new[] {message.Source}, ClientVersion, true);
                 }
             }
         }
 
         /// <summary>
-        /// Process ERRMSG messages received from a user.
+        ///     Process ERRMSG messages received from a user.
         /// </summary>
         /// <param name="message">The message received from the user.</param>
         [MessageProcessor("errmsg")]
-        protected void ProcessMessageErrMsg(CtcpMessage message)
+        protected internal void ProcessMessageErrMsg(CtcpMessage message)
         {
             Debug.Assert(message.Data != null);
 
@@ -90,16 +87,16 @@ namespace IrcDotNet.Ctcp
             }
             else
             {
-                SendMessageErrMsg(new[] { message.Source }, message.Data + " :" + messageNoError, true);
+                SendMessageErrMsg(new[] {message.Source}, message.Data + " :" + messageNoError, true);
             }
         }
 
         /// <summary>
-        /// Process PING messages received from a user.
+        ///     Process PING messages received from a user.
         /// </summary>
         /// <param name="message">The message received from the user.</param>
         [MessageProcessor("ping")]
-        protected void ProcessMessagePing(CtcpMessage message)
+        protected internal void ProcessMessagePing(CtcpMessage message)
         {
             Debug.Assert(message.Data != null);
 
@@ -113,7 +110,7 @@ namespace IrcDotNet.Ctcp
             }
             else
             {
-                SendMessagePing(new[] { message.Source }, message.Data, true);
+                SendMessagePing(new[] {message.Source}, message.Data, true);
             }
         }
     }
